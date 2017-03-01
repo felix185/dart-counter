@@ -21,6 +21,12 @@ var timesOfUndo = 0;
 
 var numberOfPlayers = 0;
 
+var hasLastWon = false;
+
+var nameLastWon = "";
+
+var numberPlayerHasWon = 0;
+
 /*
 * Javascript for Counter
 */
@@ -103,6 +109,7 @@ $('#restart').on('click', function() {
 //handle the entered score and move on to next player
 $('#next').on('click', function() {
   timesOfUndo = 0;
+  hasLastWon = false;
   //get the score from input
   var score = document.getElementById('score').value;
   //if score input is empty set score to 0
@@ -143,6 +150,9 @@ $('#next').on('click', function() {
         //if newScore is 0 the player is the Winner.
         } else if (newScore === 0) {
           var avg = roundToTwo(startNumber/playedRounds);
+          hasLastWon = true;
+          nameLastWon = document.getElementsByName('playerName')[currentPlayer].innerHTML;
+          numberPlayerHasWon = currentPlayer;
           //add the player to the table and remove player from the player list
           addPlayerToTable(avg);
           removePlayer();
@@ -174,7 +184,12 @@ $('#undo').on('click', function() {
   if (timesOfUndo != 0) {
     alert("Only one time 'Undo' allowed!");
   } else {
-    undo();
+    if(!hasLastWon) {
+      undo();
+    } else {
+      undoLastHasWon();
+    }
+
     timesOfUndo = 1;
   }
 });
@@ -337,7 +352,6 @@ function undo() {
       currentPlayer = (numberOfPlayers - 1);
 
       document.getElementById('currentRound').innerText = playedRounds;
-      console.log(currentPlayer);
       //set old Player as active
       document.getElementsByName('player')[currentPlayer].style.opacity = 1;
       document.getElementsByName('avg')[currentPlayer].style.display = "initial";
@@ -365,6 +379,68 @@ function undo() {
     document.getElementById('score').focus();
 
   }
+}
+
+function undoLastHasWon() {
+  numberOfPlayers = numberOfPlayers + 1;
+
+  //create old statistic for the player who won
+  var parent = document.getElementById('players');
+  var div = document.createElement('div');
+  div.className = "panel panel-default";
+  div.setAttribute("name", "player");
+  //create a new panel heading with name=playerName
+  var playerName = document.createElement('div');
+  playerName.className = "panel-heading";
+  playerName.setAttribute("name", "playerName");
+  playerName.innerHTML = nameLastWon;
+  //create a new panel body
+  var panelBody = document.createElement('div');
+  panelBody.className = "panel-body";
+  //create current Score
+  var playerScore = document.createElement('p');
+  playerScore.setAttribute("name", "playerScore");
+  playerScore.innerHTML = oldScore;
+  //create latest Scores
+  var averageText = document.createElement('p');
+  averageText.innerHTML = "Average: ";
+  var averageNumber = document.createElement('p');
+  averageNumber.setAttribute("name", "avg");
+  averageNumber.innerHTML = oldAvg;
+  averageText.appendChild(averageNumber);
+  //append current Score to panel body
+  panelBody.appendChild(playerScore);
+  //append latest scores to panel body
+  panelBody.appendChild(averageText);
+  //add panel heading and body to the created div
+  div.appendChild(playerName);
+  div.appendChild(panelBody);
+
+  //remove him from the winner table
+  numberOfWinners = numberOfWinners - 1;
+  document.getElementsByName('nameWinner')[numberOfWinners].innerHTML = "";
+  document.getElementsByName('average')[numberOfWinners].innerHTML = "";
+
+  if(numberPlayerHasWon == (numberOfPlayers - 1)) {
+    document.getElementsByName('player')[currentPlayer].style.opacity = 0.5;
+    currentPlayer = (numberOfPlayers - 1);
+
+    playedRounds = playedRounds - 1;
+    document.getElementById('currentRound').innerText = playedRounds;
+
+    //add created div to parent div
+    parent.appendChild(div);
+
+    document.getElementsByName('player')[currentPlayer].style.opacity = 1;
+    document.getElementsByName('avg')[currentPlayer].style.display = "initial";
+
+  } else {
+    document.getElementsByName('player')[currentPlayer].style.opacity = 0.5;
+    parent.insertBefore(div, parent.childNodes[currentPlayer]);
+    document.getElementsByName('player')[currentPlayer].style.opacity = 1;
+    document.getElementsByName('avg')[currentPlayer].style.display = "initial";
+  }
+
 }
 
 //remove player from the list
