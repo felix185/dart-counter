@@ -227,6 +227,8 @@ function init() {
     out = "Single Out";
   }
 
+  numberOfPlayers = players.length;
+
   //print the chosen settings
   document.getElementById('startnumber').innerText = startNumber;
   document.getElementById('out').innerText = out;
@@ -335,6 +337,7 @@ function undo() {
       currentPlayer = (numberOfPlayers - 1);
 
       document.getElementById('currentRound').innerText = playedRounds;
+      console.log(currentPlayer);
       //set old Player as active
       document.getElementsByName('player')[currentPlayer].style.opacity = 1;
       document.getElementsByName('avg')[currentPlayer].style.display = "initial";
