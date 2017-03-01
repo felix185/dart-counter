@@ -12,6 +12,14 @@ var numberOfWinners = 0;
 var numberOfExchangeButtons = 0;
 //number of rounds
 var playedRounds = 1;
+//old score for undo
+var oldScore = 0;
+//old average for undo
+var oldAvg = 0;
+//times of undo
+var timesOfUndo = 0;
+
+var numberOfPlayers = 0;
 
 /*
 * Javascript for Counter
@@ -54,6 +62,12 @@ $('#restart').on('click', function() {
   numberOfExchangeButtons = 0;
   //set number of played rounds = 0
   playedRounds = 1;
+  //reset for undo
+  oldScore = 0;
+  oldAvg = 0;
+  timesOfUndo = 0;
+
+  numberOfPlayers = players.length;
 
   //clear score input field
   document.getElementById('score').value = "";
@@ -88,6 +102,7 @@ $('#restart').on('click', function() {
 
 //handle the entered score and move on to next player
 $('#next').on('click', function() {
+  timesOfUndo = 0;
   //get the score from input
   var score = document.getElementById('score').value;
   //if score input is empty set score to 0
@@ -110,17 +125,18 @@ $('#next').on('click', function() {
         document.getElementById('score').value = '';
         //get the currentScore of the player
         var currentScore = document.getElementsByName('playerScore')[currentPlayer].innerHTML;
+
+        //get old avg and score for undo
+        oldAvg = document.getElementsByName('avg')[currentPlayer].innerHTML;
+        oldScore = currentScore;
+
         //get the new score
         var newScore = currentScore - score;
-        //add "Bust" to latest scores and don't do anything with the currentScore of the player. Then move on to next player
         if (newScore < 0) {
-            //document.getElementsByName('latest')[currentPlayer].innerHTML += " Bust,";
             var average = roundToTwo((startNumber - currentScore)/playedRounds);
             document.getElementsByName('avg')[currentPlayer].innerHTML = average;
             nextPlayer();
-        //add "Bust" to latest scores and don't do anything with the currentScore of the player. Then move on to next player
         } else if (newScore === 1 && doubleOut) {
-            //document.getElementsByName('latest')[currentPlayer].innerHTML += " Bust,";
             var average = roundToTwo((startNumber - currentScore)/playedRounds);
             document.getElementsByName('avg')[currentPlayer].innerHTML = average;
             nextPlayer();
@@ -130,11 +146,11 @@ $('#next').on('click', function() {
           //add the player to the table and remove player from the player list
           addPlayerToTable(avg);
           removePlayer();
+          numberOfPlayers = numberOfPlayers - 1;
         //set the newScore as currentScore and add the score to latest scores. Then move on to next player
         } else {
             document.getElementsByName('playerScore')[currentPlayer].innerHTML = newScore;
             var average = roundToTwo((startNumber - newScore)/playedRounds);
-            //document.getElementsByName('latest')[currentPlayer].innerHTML += " " + score + ",";
             document.getElementsByName('avg')[currentPlayer].innerHTML = average;
             removeExchangeButtons();
             nextPlayer();
@@ -153,6 +169,15 @@ $('#next').on('click', function() {
     }
   }
 })
+
+$('#undo').on('click', function() {
+  if (timesOfUndo != 0) {
+    alert("Only one time 'Undo' allowed!");
+  } else {
+    undo();
+    timesOfUndo = 1;
+  }
+});
 
 /*
 * Functions
@@ -294,6 +319,48 @@ function nextPlayer() {
     document.getElementById('currentRound').innerText = playedRounds;
     document.getElementsByName('player')[currentPlayer].style.opacity = 1;
     document.getElementsByName('avg')[currentPlayer].style.display = "initial";
+  }
+}
+
+function undo() {
+  if (currentPlayer == 0) {
+    if((playedRounds - 1) <= 0) {
+      alert("Don't abuse the Undo Button!");
+    } else {
+      //reduce number of played Rounds
+      playedRounds = playedRounds - 1;
+
+      //sets opacity of current Player to 0.5
+      document.getElementsByName('player')[currentPlayer].style.opacity = 0.5;
+      currentPlayer = (numberOfPlayers - 1);
+
+      document.getElementById('currentRound').innerText = playedRounds;
+      //set old Player as active
+      document.getElementsByName('player')[currentPlayer].style.opacity = 1;
+      document.getElementsByName('avg')[currentPlayer].style.display = "initial";
+      //reset old score of the player
+      document.getElementsByName('playerScore')[currentPlayer].innerHTML = oldScore;
+      document.getElementsByName('avg')[currentPlayer].innerHTML = oldAvg;
+
+      document.getElementById('score').focus();
+    }
+
+  } else {
+    //sets opacity of current Player to 0.5
+    document.getElementsByName('player')[currentPlayer].style.opacity = 0.5;
+
+    //get the player before
+    currentPlayer = currentPlayer - 1;
+
+    //set old Player as active
+    document.getElementsByName('player')[currentPlayer].style.opacity = 1;
+    document.getElementsByName('avg')[currentPlayer].style.display = "initial";
+    //reset old score of the player
+    document.getElementsByName('playerScore')[currentPlayer].innerHTML = oldScore;
+    document.getElementsByName('avg')[currentPlayer].innerHTML = oldAvg;
+
+    document.getElementById('score').focus();
+
   }
 }
 
