@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Dart Counter">
+    <meta name="author" content="Felix Riess">
+
+    <link href='https://fonts.googleapis.com/css?family=Asap' rel='stylesheet' type='text/css'>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/styleCounter.css" rel="stylesheet">
+    <link rel="shortcut icon" type="image/png" href="src/favicon.png">
+
+    <title>Felix Riess | Dart Counter</title>
+</head>
+<body onload="init()">
+  <div class="container">
+      <div class="row">
+          <div class="col-sm-12">
+              <nav class="navbar navbar-inverse" role="navigation">
+                  <a class="navbar-brand" href="index.html">Felix Riess</a>
+                  <div class="navbar-header">
+                      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+                          <span class="sr-only">Toggle navigation</span>
+                          <span class="icon-bar"></span>
+                          <span class="icon-bar"></span>
+                          <span class="icon-bar"></span>
+                      </button>
+                  </div>
+                  <div class="collapse navbar-collapse" id="navbar">
+                      <ul id="myTab" class="nav navbar-nav">
+                          <li><a href="index.html">Home</a></li>
+                          <li class="active"><a href='counterSettings.html'>Dart Counter</a></li>
+                      </ul>
+                  </div>
+              </nav>
+          </div>
+      </div>
+      <br>
+      <div class="jumbotron">
+          <div class="row">
+              <p>Please choose whether you want to play 301 or 501.</p>
+              <div class="col-sm-5">
+                  <button type="button" class="btn btn-default btn-block" id="301">301</button>
+              </div>
+              <div class="col-sm-2">
+                  <!--Free column for design reasons -->
+              </div>
+              <div class="col-sm-5">
+                  <button type="button" class="btn btn-default btn-block" id="501">501</button>
+              </div>
+          </div>
+          <br>
+          <div class="row">
+              <center>
+                <p>Please choose whether you want to play Single Out or Double out.</p>
+              </center>
+              <div class="col-sm-5">
+                  <button type="button" class="btn btn-default btn-block" id="single">Single Out</button>
+              </div>
+              <div class="col-sm-2">
+                  <!--Free column for design reasons -->
+              </div>
+              <div class="col-sm-5">
+                  <button type="button" class="btn btn-default btn-block" id="double">Double Out</button>
+              </div>
+          </div>
+          <h2>Your chosen settings: <span id="startnumber"></span>, <span id="out"></span></h2>
+          <br>
+          <p>Players:</p>
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group" id="players">
+                <input type="text" class="form-control" placeholder="Player 1" name="player">
+              </div>
+            </div>
+            <div class="col-sm-5">
+              <button type="button" class="btn btn-default btn-block" id="addPlayer">Add Player</button>
+            </div>
+            <div class="col-sm-2">
+              <!--Free column for design reasons -->
+            </div>
+            <div class="col-sm-5">
+              <button type="button" class="btn btn-default btn-block" id="removePlayer">Remove Player</button>
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-sm-12">
+              <button type="button" class="btn btn-default btn-block" id="start">Start</button>
+            </div>
+          </div>
+        </div>
+          <footer class="footer">
+              <div class="row">
+                  <div class="col-sm-12">
+                      <p class="text-muted">&copy; Felix Riess &middot; <a href=impressum.html>Impressum</a></p>
+                  </div>
+              </div>
+          </footer>
+      </div>
+
+      <script src="js/jquery-1.12.4.min.js"></script>
+      <script src="js/bootstrap.min.js"></script>
+      <script src="js/counterSettings.min.js"></script>
+</body>
+</html>

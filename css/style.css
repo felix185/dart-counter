@@ -1,0 +1,25 @@
+html {
+    position: relative;
+    min-height: 101%;
+}
+
+body {
+    font-family: 'Asap', sans-serif;
+    background-color: #D5C8B8;
+    margin-top: 30px;
+    margin-bottom: 60px;
+}
+
+.jumbotron {
+    background-color: #CCD2B0;
+}
+
+.text-muted {
+    color: #5C626A;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    height: 60px;
+}

@@ -1,0 +1,23 @@
+.jumbotron {
+    text-align: center;
+}
+
+#start {
+    font-size: 25px;
+}
+
+.btn-default {
+    background-color: #d5c8b8;
+    border-color: #3f3c37;
+}
+.form-control {
+    border-color: #3f3c37;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+.table {
+  text-align: left;
+}

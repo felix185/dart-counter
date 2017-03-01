@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Dart Counter">
+    <meta name="author" content="Felix Riess">
+
+    <link href='https://fonts.googleapis.com/css?family=Asap' rel='stylesheet' type='text/css'>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/styleCounter.css" rel="stylesheet">
+    <link rel="shortcut icon" type="image/png" href="src/favicon.png">
+
+    <title>Felix Riess | Dart Counter</title>
+</head>
+<body onload="init()">
+  <div class="container">
+      <div class="row">
+          <div class="col-sm-12">
+              <nav class="navbar navbar-inverse" role="navigation">
+                  <a class="navbar-brand" href="index.html">Felix Riess</a>
+                  <div class="navbar-header">
+                      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+                          <span class="sr-only">Toggle navigation</span>
+                          <span class="icon-bar"></span>
+                          <span class="icon-bar"></span>
+                          <span class="icon-bar"></span>
+                      </button>
+                  </div>
+                  <div class="collapse navbar-collapse" id="navbar">
+                      <ul id="myTab" class="nav navbar-nav">
+                          <li><a href="index.html">Home</a></li>
+                          <li class="active"><a href='counterSettings.html'>Dart Counter</a></li>
+                      </ul>
+                  </div>
+              </nav>
+          </div>
+      </div>
+      <br>
+      <div class="jumbotron">
+        <p>Your chosen settings: <span id="startnumber"></span>, <span id="out"></span>. Current Round: <span id="currentRound"></span></p>
+        <div class="row" id="game">
+          <div class="col-sm-5">
+              <div class="input-group">
+                  <input type="text" class="form-control" placeholder="Score" id="score">
+                  <span class="input-group-btn">
+                      <button class="btn btn-default" type="button" id="next">Next Player!</button>
+                  </span>
+              </div>
+              <br>
+              <div>
+                  <button type="button" class="btn btn-default btn-lg number">7</button>
+                  <button type="button" class="btn btn-default btn-lg number">8</button>
+                  <button type="button" class="btn btn-default btn-lg number">9</button>
+              </div>
+              <div>
+                  <button type="button" class="btn btn-default btn-lg number">4</button>
+                  <button type="button" class="btn btn-default btn-lg number">5</button>
+                  <button type="button" class="btn btn-default btn-lg number">6</button>
+              </div>
+              <div>
+                  <button type="button" class="btn btn-default btn-lg number">1</button>
+                  <button type="button" class="btn btn-default btn-lg number">2</button>
+                  <button type="button" class="btn btn-default btn-lg number">3</button>
+              </div>
+              <div>
+                  <button type="button" class="btn btn-default btn-lg number">0</button>
+                  <button type="button" class="btn btn-default btn-lg" id="rmv">
+                      <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>
+                  </button>
+              </div>
+              <br>
+              <table class="table table-condensed" id="table">
+                <tr>
+                  <th>Place</th>
+                  <th>Player</th>
+                  <th>Average</th>
+                </tr>
+              </table>
+              <br>
+          </div>
+
+          <div class="col-sm-2">
+            <!-- Free column for design reasons -->
+          </div>
+          <div class="col-sm-5" id="players">
+            <!-- Players will be listet here -->
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-5">
+            <button class="btn btn-default" type="button" id="restart">Restart Game!</button>
+          </div>
+          <div class="col-sm-2">
+            <!-- Free column for design reasons -->
+          </div>
+          <div class="col-sm-5">
+            <button class="btn btn-default" type="button" id="quit">Start a new Game with other settings</button>
+          </div>
+        </div>
+      </div>
+      <footer class="footer">
+          <div class="row">
+              <div class="col-sm-12">
+                  <p class="text-muted">&copy; Felix Riess &middot; <a href=impressum.html>Impressum</a></p>
+              </div>
+          </div>
+      </footer>
+    </div>
+
+    <script src="js/jquery-1.12.4.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/counterGame.min.js"></script>
+</body>
+</html>
