@@ -18,14 +18,18 @@ var oldScore = 0;
 var oldAvg = 0;
 //times of undo
 var timesOfUndo = 0;
-
+//number of Players
 var numberOfPlayers = 0;
-
+//boolean whether the last player who clicked next has won
 var hasLastWon = false;
-
+//the name of the last player who won
 var nameLastWon = "";
-
-var numberPlayerHasWon = 0;
+//the number of the player who won
+var numberPlayerHasWon = null;
+//the looser
+var nameLost = "";
+var avgLost = 0;
+var oldScoreLast = 0;
 
 /*
 * Javascript for Counter
@@ -72,6 +76,8 @@ $('#restart').on('click', function() {
   oldScore = 0;
   oldAvg = 0;
   timesOfUndo = 0;
+
+  numberPlayerHasWon = null;
 
   numberOfPlayers = players.length;
 
@@ -191,6 +197,7 @@ $('#undo').on('click', function() {
     }
 
     timesOfUndo = 1;
+    document.getElementById('score').focus();
   }
 });
 
@@ -284,7 +291,7 @@ function createPlayerList() {
     //create latest Scores
     var averageText = document.createElement('p');
     averageText.innerHTML = "Average: ";
-    var averageNumber = document.createElement('p');
+    var averageNumber = document.createElement('span');
     averageNumber.setAttribute("name", "avg");
     averageText.appendChild(averageNumber);
     //append current Score to panel body
@@ -324,7 +331,6 @@ function isInt(value) {
 function nextPlayer() {
   //sets opacity of current Player to 0.5
   document.getElementsByName('player')[currentPlayer].style.opacity = 0.5;
-  //document.getElementsByName('avg')[currentPlayer].style.display = "none";
   //set currentPlayer to next player. If there is no other player left set currentPlayer to first player. Set opacity of the next Player to 1
   if(currentPlayer < document.getElementsByName('player').length - 1) {
     currentPlayer = currentPlayer + 1;
@@ -376,8 +382,6 @@ function undo() {
     document.getElementsByName('playerScore')[currentPlayer].innerHTML = oldScore;
     document.getElementsByName('avg')[currentPlayer].innerHTML = oldAvg;
 
-    document.getElementById('score').focus();
-
   }
 }
 
@@ -404,7 +408,7 @@ function undoLastHasWon() {
   //create latest Scores
   var averageText = document.createElement('p');
   averageText.innerHTML = "Average: ";
-  var averageNumber = document.createElement('p');
+  var averageNumber = document.createElement('span');
   averageNumber.setAttribute("name", "avg");
   averageNumber.innerHTML = oldAvg;
   averageText.appendChild(averageNumber);
@@ -416,15 +420,8 @@ function undoLastHasWon() {
   div.appendChild(playerName);
   div.appendChild(panelBody);
 
-  //remove him from the winner table
-  numberOfWinners = numberOfWinners - 1;
-  document.getElementsByName('nameWinner')[numberOfWinners].innerHTML = "";
-  document.getElementsByName('average')[numberOfWinners].innerHTML = "";
-
-  if(numberPlayerHasWon == (numberOfPlayers - 1)) {
-    document.getElementsByName('player')[currentPlayer].style.opacity = 0.5;
-    currentPlayer = (numberOfPlayers - 1);
-
+  if (players.length == 1) {
+    currentPlayer = 0;
     playedRounds = playedRounds - 1;
     document.getElementById('currentRound').innerText = playedRounds;
 
@@ -434,11 +431,70 @@ function undoLastHasWon() {
     document.getElementsByName('player')[currentPlayer].style.opacity = 1;
     document.getElementsByName('avg')[currentPlayer].style.display = "initial";
 
-  } else {
-    document.getElementsByName('player')[currentPlayer].style.opacity = 0.5;
-    parent.insertBefore(div, parent.childNodes[currentPlayer]);
+    //remove him from the winner table
+    numberOfWinners = numberOfWinners - 1;
+    document.getElementsByName('nameWinner')[numberOfWinners].innerHTML = "";
+    document.getElementsByName('average')[numberOfWinners].innerHTML = "";
+
+  } else if (numberOfWinners == players.length) {
+
+
+    var div2 = div.cloneNode(true);
+    parent.appendChild(div);
+    parent.appendChild(div2);
+
+    if (numberPlayerHasWon == 0) {
+      document.getElementsByName('playerName')[1].innerHTML = nameLost;
+      document.getElementsByName('playerScore')[1].innerHTML = oldScoreLast;
+      document.getElementsByName('avg')[1].innerHTML = avgLost;
+      document.getElementsByName('player')[1].style.opacity = 0.5;
+      currentPlayer = 0;
+    } else {
+      document.getElementsByName('playerName')[0].innerHTML = nameLost;
+      document.getElementsByName('playerScore')[0].innerHTML = oldScoreLast;
+      document.getElementsByName('avg')[0].innerHTML = avgLost;
+      document.getElementsByName('player')[0].style.opacity = 0.5;
+      currentPlayer = 1;
+
+      playedRounds = playedRounds - 1;
+      document.getElementById('currentRound').innerText = playedRounds;
+    }
     document.getElementsByName('player')[currentPlayer].style.opacity = 1;
-    document.getElementsByName('avg')[currentPlayer].style.display = "initial";
+
+    numberOfWinners = numberOfWinners - 1;
+    document.getElementsByName('nameWinner')[numberOfWinners].innerHTML = "";
+    document.getElementsByName('average')[numberOfWinners].innerHTML = "";
+
+    numberOfWinners = numberOfWinners - 1;
+    document.getElementsByName('nameWinner')[numberOfWinners].innerHTML = "";
+    document.getElementsByName('average')[numberOfWinners].innerHTML = "";
+
+
+  } else {
+      document.getElementsByName('player')[currentPlayer].style.opacity = 0.5;
+
+      if ((numberPlayerHasWon) === (numberOfPlayers - 1)) {
+        currentPlayer = (numberOfPlayers - 1);
+
+        playedRounds = playedRounds - 1;
+        document.getElementById('currentRound').innerText = playedRounds;
+
+        //add created div to parent div
+        parent.appendChild(div);
+
+        document.getElementsByName('player')[currentPlayer].style.opacity = 1;
+        document.getElementsByName('avg')[currentPlayer].style.display = "initial";
+      } else {
+//hier stimmt was nicht
+        parent.insertBefore(div, parent.lastChild);
+        document.getElementsByName('player')[currentPlayer].style.opacity = 1;
+        document.getElementsByName('avg')[currentPlayer].style.display = "initial";
+      }
+
+    //remove him from the winner table
+    numberOfWinners = numberOfWinners - 1;
+    document.getElementsByName('nameWinner')[numberOfWinners].innerHTML = "";
+    document.getElementsByName('average')[numberOfWinners].innerHTML = "";
   }
 
 }
@@ -462,9 +518,13 @@ function removePlayer() {
   //if there is only one player left, add him to the table and remove the player from the list
   if(document.getElementsByName('player').length === 1) {
     var avg = document.getElementsByName('avg')[currentPlayer].innerHTML;
+    oldScoreLast = document.getElementsByName('playerScore')[currentPlayer].innerHTML;
+    nameLost = document.getElementsByName('playerName')[currentPlayer].innerHTML;
+    avgLost = avg;
     addPlayerToTable(avg);
     elem = document.getElementsByName('player')[currentPlayer];
     elem.parentNode.removeChild(elem);
+    numberOfPlayers = numberOfPlayers - 1;
   }
 
 }
