@@ -12,6 +12,24 @@ var numberOfWinners = 0;
 var numberOfExchangeButtons = 0;
 //number of rounds
 var playedRounds = 1;
+//old score for undo
+var oldScore = 0;
+//old average for undo
+var oldAvg = 0;
+//times of undo
+var timesOfUndo = 0;
+//number of Players
+var numberOfPlayers = 0;
+//boolean whether the last player who clicked next has won
+var hasLastWon = false;
+//the name of the last player who won
+var nameLastWon = "";
+//the number of the player who won
+var numberPlayerHasWon = null;
+//the looser
+var nameLost = "";
+var avgLost = 0;
+var oldScoreLast = 0;
 
 /*
 * Javascript for Counter
@@ -54,6 +72,14 @@ $('#restart').on('click', function() {
   numberOfExchangeButtons = 0;
   //set number of played rounds = 0
   playedRounds = 1;
+  //reset for undo
+  oldScore = 0;
+  oldAvg = 0;
+  timesOfUndo = 0;
+
+  numberPlayerHasWon = null;
+
+  numberOfPlayers = players.length;
 
   //clear score input field
   document.getElementById('score').value = "";
@@ -88,6 +114,8 @@ $('#restart').on('click', function() {
 
 //handle the entered score and move on to next player
 $('#next').on('click', function() {
+  timesOfUndo = 0;
+  hasLastWon = false;
   //get the score from input
   var score = document.getElementById('score').value;
   //if score input is empty set score to 0
@@ -110,31 +138,35 @@ $('#next').on('click', function() {
         document.getElementById('score').value = '';
         //get the currentScore of the player
         var currentScore = document.getElementsByName('playerScore')[currentPlayer].innerHTML;
+
+        //get old avg and score for undo
+        oldAvg = document.getElementsByName('avg')[currentPlayer].innerHTML;
+        oldScore = currentScore;
+
         //get the new score
         var newScore = currentScore - score;
-        //add "Bust" to latest scores and don't do anything with the currentScore of the player. Then move on to next player
         if (newScore < 0) {
-            //document.getElementsByName('latest')[currentPlayer].innerHTML += " Bust,";
             var average = roundToTwo((startNumber - currentScore)/playedRounds);
             document.getElementsByName('avg')[currentPlayer].innerHTML = average;
             nextPlayer();
-        //add "Bust" to latest scores and don't do anything with the currentScore of the player. Then move on to next player
         } else if (newScore === 1 && doubleOut) {
-            //document.getElementsByName('latest')[currentPlayer].innerHTML += " Bust,";
             var average = roundToTwo((startNumber - currentScore)/playedRounds);
             document.getElementsByName('avg')[currentPlayer].innerHTML = average;
             nextPlayer();
         //if newScore is 0 the player is the Winner.
         } else if (newScore === 0) {
           var avg = roundToTwo(startNumber/playedRounds);
+          hasLastWon = true;
+          nameLastWon = document.getElementsByName('playerName')[currentPlayer].innerHTML;
+          numberPlayerHasWon = currentPlayer;
           //add the player to the table and remove player from the player list
           addPlayerToTable(avg);
           removePlayer();
+          numberOfPlayers = numberOfPlayers - 1;
         //set the newScore as currentScore and add the score to latest scores. Then move on to next player
         } else {
             document.getElementsByName('playerScore')[currentPlayer].innerHTML = newScore;
             var average = roundToTwo((startNumber - newScore)/playedRounds);
-            //document.getElementsByName('latest')[currentPlayer].innerHTML += " " + score + ",";
             document.getElementsByName('avg')[currentPlayer].innerHTML = average;
             removeExchangeButtons();
             nextPlayer();
@@ -153,6 +185,21 @@ $('#next').on('click', function() {
     }
   }
 })
+
+$('#undo').on('click', function() {
+  if (timesOfUndo != 0) {
+    alert("Only one time 'Undo' allowed!");
+  } else {
+    if(!hasLastWon) {
+      undo();
+    } else {
+      undoLastHasWon();
+    }
+
+    timesOfUndo = 1;
+    document.getElementById('score').focus();
+  }
+});
 
 /*
 * Functions
@@ -202,6 +249,8 @@ function init() {
     out = "Single Out";
   }
 
+  numberOfPlayers = players.length;
+
   //print the chosen settings
   document.getElementById('startnumber').innerText = startNumber;
   document.getElementById('out').innerText = out;
@@ -242,7 +291,7 @@ function createPlayerList() {
     //create latest Scores
     var averageText = document.createElement('p');
     averageText.innerHTML = "Average: ";
-    var averageNumber = document.createElement('p');
+    var averageNumber = document.createElement('span');
     averageNumber.setAttribute("name", "avg");
     averageText.appendChild(averageNumber);
     //append current Score to panel body
@@ -282,7 +331,6 @@ function isInt(value) {
 function nextPlayer() {
   //sets opacity of current Player to 0.5
   document.getElementsByName('player')[currentPlayer].style.opacity = 0.5;
-  //document.getElementsByName('avg')[currentPlayer].style.display = "none";
   //set currentPlayer to next player. If there is no other player left set currentPlayer to first player. Set opacity of the next Player to 1
   if(currentPlayer < document.getElementsByName('player').length - 1) {
     currentPlayer = currentPlayer + 1;
@@ -295,6 +343,159 @@ function nextPlayer() {
     document.getElementsByName('player')[currentPlayer].style.opacity = 1;
     document.getElementsByName('avg')[currentPlayer].style.display = "initial";
   }
+}
+
+function undo() {
+  if (currentPlayer == 0) {
+    if((playedRounds - 1) <= 0) {
+      alert("Don't abuse the Undo Button!");
+    } else {
+      //reduce number of played Rounds
+      playedRounds = playedRounds - 1;
+
+      //sets opacity of current Player to 0.5
+      document.getElementsByName('player')[currentPlayer].style.opacity = 0.5;
+      currentPlayer = (numberOfPlayers - 1);
+
+      document.getElementById('currentRound').innerText = playedRounds;
+      //set old Player as active
+      document.getElementsByName('player')[currentPlayer].style.opacity = 1;
+      document.getElementsByName('avg')[currentPlayer].style.display = "initial";
+      //reset old score of the player
+      document.getElementsByName('playerScore')[currentPlayer].innerHTML = oldScore;
+      document.getElementsByName('avg')[currentPlayer].innerHTML = oldAvg;
+
+      document.getElementById('score').focus();
+    }
+
+  } else {
+    //sets opacity of current Player to 0.5
+    document.getElementsByName('player')[currentPlayer].style.opacity = 0.5;
+
+    //get the player before
+    currentPlayer = currentPlayer - 1;
+
+    //set old Player as active
+    document.getElementsByName('player')[currentPlayer].style.opacity = 1;
+    document.getElementsByName('avg')[currentPlayer].style.display = "initial";
+    //reset old score of the player
+    document.getElementsByName('playerScore')[currentPlayer].innerHTML = oldScore;
+    document.getElementsByName('avg')[currentPlayer].innerHTML = oldAvg;
+
+  }
+}
+
+function undoLastHasWon() {
+  numberOfPlayers = numberOfPlayers + 1;
+
+  //create old statistic for the player who won
+  var parent = document.getElementById('players');
+  var div = document.createElement('div');
+  div.className = "panel panel-default";
+  div.setAttribute("name", "player");
+  //create a new panel heading with name=playerName
+  var playerName = document.createElement('div');
+  playerName.className = "panel-heading";
+  playerName.setAttribute("name", "playerName");
+  playerName.innerHTML = nameLastWon;
+  //create a new panel body
+  var panelBody = document.createElement('div');
+  panelBody.className = "panel-body";
+  //create current Score
+  var playerScore = document.createElement('p');
+  playerScore.setAttribute("name", "playerScore");
+  playerScore.innerHTML = oldScore;
+  //create latest Scores
+  var averageText = document.createElement('p');
+  averageText.innerHTML = "Average: ";
+  var averageNumber = document.createElement('span');
+  averageNumber.setAttribute("name", "avg");
+  averageNumber.innerHTML = oldAvg;
+  averageText.appendChild(averageNumber);
+  //append current Score to panel body
+  panelBody.appendChild(playerScore);
+  //append latest scores to panel body
+  panelBody.appendChild(averageText);
+  //add panel heading and body to the created div
+  div.appendChild(playerName);
+  div.appendChild(panelBody);
+
+  if (players.length == 1) {
+    currentPlayer = 0;
+    playedRounds = playedRounds - 1;
+    document.getElementById('currentRound').innerText = playedRounds;
+
+    //add created div to parent div
+    parent.appendChild(div);
+
+    document.getElementsByName('player')[currentPlayer].style.opacity = 1;
+    document.getElementsByName('avg')[currentPlayer].style.display = "initial";
+
+    //remove him from the winner table
+    numberOfWinners = numberOfWinners - 1;
+    document.getElementsByName('nameWinner')[numberOfWinners].innerHTML = "";
+    document.getElementsByName('average')[numberOfWinners].innerHTML = "";
+
+  } else if (numberOfWinners == players.length) {
+
+
+    var div2 = div.cloneNode(true);
+    parent.appendChild(div);
+    parent.appendChild(div2);
+
+    if (numberPlayerHasWon == 0) {
+      document.getElementsByName('playerName')[1].innerHTML = nameLost;
+      document.getElementsByName('playerScore')[1].innerHTML = oldScoreLast;
+      document.getElementsByName('avg')[1].innerHTML = avgLost;
+      document.getElementsByName('player')[1].style.opacity = 0.5;
+      currentPlayer = 0;
+    } else {
+      document.getElementsByName('playerName')[0].innerHTML = nameLost;
+      document.getElementsByName('playerScore')[0].innerHTML = oldScoreLast;
+      document.getElementsByName('avg')[0].innerHTML = avgLost;
+      document.getElementsByName('player')[0].style.opacity = 0.5;
+      currentPlayer = 1;
+
+      playedRounds = playedRounds - 1;
+      document.getElementById('currentRound').innerText = playedRounds;
+    }
+    document.getElementsByName('player')[currentPlayer].style.opacity = 1;
+
+    numberOfWinners = numberOfWinners - 1;
+    document.getElementsByName('nameWinner')[numberOfWinners].innerHTML = "";
+    document.getElementsByName('average')[numberOfWinners].innerHTML = "";
+
+    numberOfWinners = numberOfWinners - 1;
+    document.getElementsByName('nameWinner')[numberOfWinners].innerHTML = "";
+    document.getElementsByName('average')[numberOfWinners].innerHTML = "";
+
+
+  } else {
+      document.getElementsByName('player')[currentPlayer].style.opacity = 0.5;
+
+      if ((numberPlayerHasWon) === (numberOfPlayers - 1)) {
+        currentPlayer = (numberOfPlayers - 1);
+
+        playedRounds = playedRounds - 1;
+        document.getElementById('currentRound').innerText = playedRounds;
+
+        //add created div to parent div
+        parent.appendChild(div);
+
+        document.getElementsByName('player')[currentPlayer].style.opacity = 1;
+        document.getElementsByName('avg')[currentPlayer].style.display = "initial";
+      } else {
+        parent.insertBefore(div, parent.childNodes[currentPlayer]);
+        document.getElementsByName('player')[currentPlayer].style.opacity = 1;
+        document.getElementsByName('avg')[currentPlayer].style.display = "initial";
+      }
+
+    //remove him from the winner table
+    numberOfWinners = numberOfWinners - 1;
+    document.getElementsByName('nameWinner')[numberOfWinners].innerHTML = "";
+    document.getElementsByName('average')[numberOfWinners].innerHTML = "";
+  }
+
 }
 
 //remove player from the list
@@ -316,9 +517,13 @@ function removePlayer() {
   //if there is only one player left, add him to the table and remove the player from the list
   if(document.getElementsByName('player').length === 1) {
     var avg = document.getElementsByName('avg')[currentPlayer].innerHTML;
+    oldScoreLast = document.getElementsByName('playerScore')[currentPlayer].innerHTML;
+    nameLost = document.getElementsByName('playerName')[currentPlayer].innerHTML;
+    avgLost = avg;
     addPlayerToTable(avg);
     elem = document.getElementsByName('player')[currentPlayer];
     elem.parentNode.removeChild(elem);
+    numberOfPlayers = numberOfPlayers - 1;
   }
 
 }
