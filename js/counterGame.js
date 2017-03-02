@@ -78,6 +78,7 @@ $('#restart').on('click', function() {
   timesOfUndo = 0;
 
   numberPlayerHasWon = null;
+  hasLastWon = false;
 
   numberOfPlayers = players.length;
 
@@ -222,6 +223,7 @@ function init() {
     //switch to the settings for a new game
     window.location.href = "./counterSettings.html";
   }
+    
 
   //will be the String "double out" or "single out"
   var out;
@@ -267,6 +269,8 @@ function init() {
   document.getElementsByName('player')[0].style.opacity = 1;
   //set cursor in input field
   document.getElementById('score').focus();
+    
+  document.getElementById('restart').click();
 }
 
 //creates the list of all players
