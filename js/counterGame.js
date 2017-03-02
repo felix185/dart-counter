@@ -485,8 +485,7 @@ function undoLastHasWon() {
         document.getElementsByName('player')[currentPlayer].style.opacity = 1;
         document.getElementsByName('avg')[currentPlayer].style.display = "initial";
       } else {
-//hier stimmt was nicht
-        parent.insertBefore(div, parent.lastChild);
+        parent.insertBefore(div, parent.childNodes[currentPlayer]);
         document.getElementsByName('player')[currentPlayer].style.opacity = 1;
         document.getElementsByName('avg')[currentPlayer].style.display = "initial";
       }
