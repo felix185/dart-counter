@@ -31,6 +31,27 @@ var nameLost = "";
 var avgLost = 0;
 var oldScoreLast = 0;
 
+var isMobile = {
+    Android: function() {
+        return navigator.userAgent.match(/Android/i);
+    },
+    BlackBerry: function() {
+        return navigator.userAgent.match(/BlackBerry/i);
+    },
+    iOS: function() {
+        return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+    },
+    Opera: function() {
+        return navigator.userAgent.match(/Opera Mini/i);
+    },
+    Windows: function() {
+        return navigator.userAgent.match(/IEMobile/i);
+    },
+    any: function() {
+        return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+    }
+};
+
 /*
 * Javascript for Counter
 */
@@ -198,7 +219,11 @@ $('#undo').on('click', function() {
     }
 
     timesOfUndo = 1;
-    document.getElementById('score').focus();
+    
+    if (!isMobile.any) {
+      document.getElementById('score').focus();
+    }
+    
   }
 });
 
