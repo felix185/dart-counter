@@ -219,11 +219,11 @@ $('#undo').on('click', function() {
     }
 
     timesOfUndo = 1;
-    
+
     if (!isMobile.any) {
       document.getElementById('score').focus();
     }
-    
+
   }
 });
 
@@ -248,7 +248,7 @@ function init() {
     //switch to the settings for a new game
     window.location.href = "./counterSettings.html";
   }
-    
+
 
   //will be the String "double out" or "single out"
   var out;
@@ -294,7 +294,7 @@ function init() {
   document.getElementsByName('player')[0].style.opacity = 1;
   //set cursor in input field
   document.getElementById('score').focus();
-    
+
   document.getElementById('restart').click();
 }
 
@@ -661,6 +661,9 @@ function exchangePlayer(n) {
   //exchange names
   document.getElementsByName('playerName')[(n - 1)].innerHTML = playerTwo;
   document.getElementsByName('playerName')[n].innerHTML = playerOne;
+
+  //set cursor in input field
+  document.getElementById('score').focus();
 }
 
 function roundToTwo(num) {
