@@ -23,6 +23,11 @@ $('#501').on('click', function () {
     document.getElementById('startnumber').innerText = 501;
     storeInSessionStorage('startNumber', startNumber);
 })
+$('#170').on('click', function () {
+    startNumber = 170;
+    document.getElementById('startnumber').innerText = 170;
+    storeInSessionStorage('startNumber', startNumber);
+})
 //set single out and save it in session Storage
 $('#single').on('click', function () {
     doubleOut = false;
