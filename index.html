@@ -16,7 +16,7 @@
     <title>Felix Riess | Home</title>
 </head>
 
-<body>
+<body onload="init()">
     <div class="container">
         <div class="row">
             <div class="col-sm-12">
@@ -45,11 +45,28 @@
                 <div class="col-sm-12">
                     <div class="row featurette">
                         <div class="col-md-7">
-                            <h2 class="featurette-heading">Hi, I'm Felix. I'm 21. And I'm funny. <span class="text-muted">Sometimes.</span></h2>
-                            <p class="lead">I'm a student of Computer Science in Stuttgart. My hobbies are football, darts and music. I play the guitar, piano and organ.</p>
+                            <h2 class="featurette-heading">Hi, I'm Felix. I'm <span id="age"></span>. And I'm funny. <span class="text-muted">Sometimes.</span></h2>
+                            <p class="lead">I'm working as a Software Engineer in Stuttgart. My hobbies are football, darts and music. I play the guitar, piano and organ.</p>
                         </div>
                         <div class="col-md-5">
                             <img class="featurette-image img-responsive center-block" alt="Felix Riess" src="src/felix_cambridge.jpg">
+                        </div>
+                    </div>
+                    <hr class="featurette-divider">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <p><i>October 12th, 2017</i></p>
+                    <div class="row featurette">
+                        <div class="col-sm-12">
+                            <h2 class="featurette-heading">Good evening everybody, I have some exciting news for you!</h2>
+                            <p class="lead">I will not go on with the development of the counter on this website. I want to develop a complete new counter instead and the work has already begon.</p>
+                            <p class="lead">I want to develop a counter with a Backend instead of using only client-side technologies.</p>
+                            <p class="lead">There is already a <a href="https://github.com/felix185/countDarto" target="_blank">Github Repository</a> for the new counter.</p>
+                            <p class="lead">I can't tell you when I will release the first version of the counter as I have so many ideas for it. Also I have a new job as Software Engineer and I can't estimate how much time I can invest in the development of the new counter.</p>
+                            <p class="lead">Nevertheless, I will not delete the counter from this website.</p>
+                            <p class="lead">Happy coding to everybody and Game on!</p>
                         </div>
                     </div>
                     <hr class="featurette-divider">
@@ -196,6 +213,7 @@
         </footer>
     </div>
 
+    <script src="js/index.min.js"></script>
     <script src="js/jquery-1.12.4.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
 </body>
